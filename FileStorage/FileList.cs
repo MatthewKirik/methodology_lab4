@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.IO.Abstractions;
 using Newtonsoft.Json;
 
 namespace FileStorage;
@@ -6,11 +7,13 @@ namespace FileStorage;
 public class FileList<T> : IEnumerable<T>
 {
     private readonly string _path;
+    private readonly IFileSystem _fileSystem;
     private readonly string _filepath;
 
-    public FileList(string path, string filename)
+    public FileList(string path, string filename, IFileSystem fileSystem)
     {
         _path = path;
+        _fileSystem = fileSystem;
         _filepath = Path.Combine(_path, filename);
         EnsureFileExists();
     }
@@ -18,8 +21,8 @@ public class FileList<T> : IEnumerable<T>
     private void EnsureFileExists()
     {
         Directory.CreateDirectory(_path);
-        if (!File.Exists(_filepath))
-            File.Create(_filepath).Dispose();
+        if (!_fileSystem.File.Exists(_filepath))
+            _fileSystem.File.Create(_filepath).Dispose();
     }
     
     private static T? DeserializeLine(string? line)
@@ -29,7 +32,7 @@ public class FileList<T> : IEnumerable<T>
 
     private IEnumerable<T> EnumerateEntries()
     {
-        foreach (var line in File.ReadLines(_filepath))
+        foreach (var line in _fileSystem.File.ReadLines(_filepath))
         {
             var obj = DeserializeLine(line);
             if (obj == null) continue;
@@ -51,7 +54,7 @@ public class FileList<T> : IEnumerable<T>
     {
         string json = SerializeObject(objectToAdd);
         string line = $"{json}{Environment.NewLine}";
-        File.AppendAllText(_filepath, line);
+        _fileSystem.File.AppendAllText(_filepath, line);
     }
 
     private IEnumerable<T> Remove(Func<T, bool> predicate, int? limit)
@@ -78,13 +81,13 @@ public class FileList<T> : IEnumerable<T>
                 }
             }
 
-            File.Delete(_filepath);
-            File.Move(tempFile, _filepath);
+            _fileSystem.File.Delete(_filepath);
+            _fileSystem.File.Move(tempFile, _filepath);
         }
         finally
         {
-            if (tempFile != null && File.Exists(tempFile))
-                File.Delete(tempFile);
+            if (tempFile != null && _fileSystem.File.Exists(tempFile))
+                _fileSystem.File.Delete(tempFile);
         }
         return removed;
     }
