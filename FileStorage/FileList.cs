@@ -20,7 +20,7 @@ public class FileList<T> : IEnumerable<T>
 
     private void EnsureFileExists()
     {
-        Directory.CreateDirectory(_path);
+        _fileSystem.Directory.CreateDirectory(_path);
         if (!_fileSystem.File.Exists(_filepath))
             _fileSystem.File.Create(_filepath).Dispose();
     }
