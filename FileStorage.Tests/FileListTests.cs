@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
+using FluentAssertions;
 using Xunit;
 
 namespace FileStorage.Tests;
@@ -25,9 +26,9 @@ public class FileListTests
             fileDirectory,
             fileName,
             fileSystem);
+        bool fileExists = fileSystem.File.Exists(filePath);
         
         //Assert
-        bool fileExists = fileSystem.File.Exists(filePath);
-        Assert.True(fileExists);
+        fileExists.Should().BeTrue();
     }
 }
