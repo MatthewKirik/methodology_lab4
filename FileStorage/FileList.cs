@@ -1,6 +1,8 @@
-﻿namespace FileStorage;
+﻿using Newtonsoft.Json;
 
-public class FileList
+namespace FileStorage;
+
+public class FileList<T>
 {
     private readonly string _path;
     private readonly string _filepath;
@@ -17,5 +19,15 @@ public class FileList
         Directory.CreateDirectory(_path);
         if (!File.Exists(_filepath))
             File.Create(_filepath).Dispose();
+    }
+
+    private IEnumerable<T> EnumerateEntries()
+    {
+       foreach (var line in File.ReadLines(_filepath))
+       {  
+           var obj = JsonConvert.DeserializeObject<T>(line);
+           if (obj == null) continue;
+           yield return obj;
+       }
     }
 }
