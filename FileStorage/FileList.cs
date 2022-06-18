@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections;
+using Newtonsoft.Json;
 
 namespace FileStorage;
 
-public class FileList<T>
+public class FileList<T> : IEnumerable<T>
 {
     private readonly string _path;
     private readonly string _filepath;
@@ -29,5 +30,15 @@ public class FileList<T>
            if (obj == null) continue;
            yield return obj;
        }
+    }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        return EnumerateEntries().GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }
