@@ -69,6 +69,7 @@ public class FileList<T> : IEnumerable<T>
     {
         var removed = new List<T>();
         string? tempFile = null;
+        string? line = null;
         string filePath = FilePath;
         try
         {
@@ -76,15 +77,16 @@ public class FileList<T> : IEnumerable<T>
             using (var sr = new StreamReader(_fileSystem.FileStream.Create(filePath, FileMode.Open)))
             using (var sw = new StreamWriter(_fileSystem.FileStream.Create(tempFile, FileMode.Create)))
             {
-                for (int i = 0; limit == null || i < limit; i++)
+                int deleted = 0;
+                while ((line = sr.ReadLine()) != null)
                 {
-                    string? line = sr.ReadLine();
-                    if (line == null)
-                        break;
                     var obj = DeserializeLine(line);
                     if (obj == null) continue;
-                    if (predicate(obj))
+                    if (deleted < limit && predicate(obj))
+                    {
                         removed.Add(obj);
+                        deleted++;
+                    }
                     else
                         sw.WriteLine(line);
                 }
