@@ -13,7 +13,7 @@ public class FileListTests
         public string Text { get; set; }
     }
 
-    private const string FileName = @"c:\data\mock_dtos.jsonl";
+    private readonly string _fileName = Path.DirectorySeparatorChar + "mock_dtos.jsonl";
 
     private static readonly MockDto[] MockObjects =
     {
@@ -37,7 +37,7 @@ public class FileListTests
         // Arrange
         var fileSystem = new MockFileSystem();
         var _sut = new FileList<MockDto>(
-            FileName,
+            _fileName,
             fileSystem);
         var mockObject = new MockDto {Id = 12, Text = "Hello"};
 
@@ -45,7 +45,7 @@ public class FileListTests
         _sut.Add(mockObject);
 
         //Assert
-        bool fileExists = fileSystem.File.Exists(FileName);
+        bool fileExists = fileSystem.File.Exists(_fileName);
         fileExists.Should().BeTrue();
     }
     
@@ -55,20 +55,20 @@ public class FileListTests
         // Arrange
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
-            {FileName, ""}
+            {_fileName, ""}
         });
         var sut = new FileList<MockDto>(
-            FileName,
+            _fileName,
             fileSystem);
         var lengthBefore = fileSystem.FileInfo
-            .FromFileName(FileName).Length;
+            .FromFileName(_fileName).Length;
 
         // Act
         sut.Add(MockObject);
 
         //Assert
         var lengthAfter = fileSystem.FileInfo
-            .FromFileName(FileName).Length;
+            .FromFileName(_fileName).Length;
         lengthAfter.Should().BeGreaterThan(lengthBefore);
     }
     
@@ -78,10 +78,10 @@ public class FileListTests
         // Arrange
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
-            {FileName, ""}
+            {_fileName, ""}
         });
         var _sut = new FileList<MockDto>(
-            FileName,
+            _fileName,
             fileSystem);
 
         // Act
@@ -89,7 +89,7 @@ public class FileListTests
 
         //Assert
         string json = JsonConvert.SerializeObject(MockObject) + Environment.NewLine;
-        string fileContent = fileSystem.File.ReadAllText(FileName);
+        string fileContent = fileSystem.File.ReadAllText(_fileName);
         fileContent.Should().Be(json);
     }
     
@@ -100,10 +100,10 @@ public class FileListTests
         string json = GetJsonLine(MockObject);
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
-            {FileName, json}
+            {_fileName, json}
         });
         var sut = new FileList<MockDto>(
-            FileName,
+            _fileName,
             fileSystem);
 
         // Act
@@ -120,10 +120,10 @@ public class FileListTests
         string json = GetJsonLines(MockObjects);
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
-            {FileName, json}
+            {_fileName, json}
         });
         var sut = new FileList<MockDto>(
-            FileName,
+            _fileName,
             fileSystem);
         const int fromId = 13, toId = 15;
 
@@ -145,10 +145,10 @@ public class FileListTests
         var json = GetJsonLines(MockObjects);
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
-            {FileName, json}
+            {_fileName, json}
         });
         var sut = new FileList<MockDto>(
-            FileName,
+            _fileName,
             fileSystem);
         const int fromId = 13, toId = 15;
 
@@ -159,7 +159,7 @@ public class FileListTests
         var filteredMockObjects = MockObjects
             .Where(x => x.Id is < fromId or > toId);
         string jsonAfterRemove = GetJsonLines(filteredMockObjects);
-        string fileContent = fileSystem.File.ReadAllText(FileName);
+        string fileContent = fileSystem.File.ReadAllText(_fileName);
         fileContent.Should().Be(jsonAfterRemove);
     }
     
@@ -170,10 +170,10 @@ public class FileListTests
         var json = GetJsonLines(MockObjects);
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
-            {FileName, json}
+            {_fileName, json}
         });
         var sut = new FileList<MockDto>(
-            FileName,
+            _fileName,
             fileSystem);
 
         // Act
@@ -183,7 +183,7 @@ public class FileListTests
         var filteredMockObjects = MockObjects
             .Skip(1);
         string jsonAfterRemove = GetJsonLines(filteredMockObjects);
-        string fileContent = fileSystem.File.ReadAllText(FileName);
+        string fileContent = fileSystem.File.ReadAllText(_fileName);
         fileContent.Should().Be(jsonAfterRemove);
     }
     
@@ -194,10 +194,10 @@ public class FileListTests
         var json = GetJsonLines(MockObjects);
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
-            {FileName, json}
+            {_fileName, json}
         });
         var sut = new FileList<MockDto>(
-            FileName,
+            _fileName,
             fileSystem);
 
         // Act
@@ -213,7 +213,7 @@ public class FileListTests
             .Skip(1)
             .Append(new MockDto {Id = 12, Text = "Hello edited"});
         string jsonAfterRemove = GetJsonLines(editedMockObjects);
-        string fileContent = fileSystem.File.ReadAllText(FileName);
+        string fileContent = fileSystem.File.ReadAllText(_fileName);
         fileContent.Should().Be(jsonAfterRemove);
     }
 }
