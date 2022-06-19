@@ -186,4 +186,34 @@ public class FileListTests
         string fileContent = fileSystem.File.ReadAllText(FileName);
         fileContent.Should().Be(jsonAfterRemove);
     }
+    
+    [Fact]
+    public void EditsFirstObject()
+    {
+        // Arrange
+        var json = GetJsonLines(MockObjects);
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            {FileName, json}
+        });
+        var sut = new FileList<MockDto>(
+            FileName,
+            fileSystem);
+
+        // Act
+        sut.EditFirst(_ => true, 
+            dto => new MockDto
+            {
+                Id = dto.Id,
+                Text = dto.Text + " edited"
+            });
+
+        //Assert
+        var editedMockObjects = MockObjects
+            .Skip(1)
+            .Append(new MockDto {Id = 12, Text = "Hello edited"});
+        string jsonAfterRemove = GetJsonLines(editedMockObjects);
+        string fileContent = fileSystem.File.ReadAllText(FileName);
+        fileContent.Should().Be(jsonAfterRemove);
+    }
 }
