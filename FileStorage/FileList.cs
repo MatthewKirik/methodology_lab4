@@ -69,28 +69,30 @@ public class FileList<T> : IEnumerable<T>
     {
         var removed = new List<T>();
         string? tempFile = null;
+        string filePath = FilePath;
         try
         {
-            tempFile = Path.GetTempFileName();
-            using (var sr = new StreamReader(FilePath))
-            using (var sw = new StreamWriter(tempFile, false, sr.CurrentEncoding))
+            tempFile = _fileSystem.Path.GetTempFileName();
+            using (var sr = new StreamReader(_fileSystem.FileStream.Create(filePath, FileMode.Open)))
+            using (var sw = new StreamWriter(_fileSystem.FileStream.Create(tempFile, FileMode.Create)))
             {
                 for (int i = 0; limit == null || i < limit; i++)
                 {
                     string? line = sr.ReadLine();
-                    if (line != null)
+                    if (line == null)
                         break;
                     var obj = DeserializeLine(line);
                     if (obj == null) continue;
-                    if (!predicate(obj))
+                    if (predicate(obj))
                         removed.Add(obj);
                     else
                         sw.WriteLine(line);
                 }
             }
+            
 
-            _fileSystem.File.Delete(FilePath);
-            _fileSystem.File.Move(tempFile, FilePath);
+            _fileSystem.File.Delete(filePath);
+            _fileSystem.File.Move(tempFile, filePath);
         }
         finally
         {
