@@ -82,7 +82,7 @@ public class FileList<T> : IEnumerable<T>
                 {
                     var obj = DeserializeLine(line);
                     if (obj == null) continue;
-                    if (deleted < limit && predicate(obj))
+                    if ((limit == null || deleted < limit) && predicate(obj))
                     {
                         removed.Add(obj);
                         deleted++;
