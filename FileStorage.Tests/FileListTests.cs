@@ -10,7 +10,7 @@ public class FileListTests
     private class DummyDto
     {
         public int Id { get; set; }
-        public string Text { get; set; }
+        public string Text { get; set; } = default!;
     }
 
     private readonly string _fileName = Path.DirectorySeparatorChar + "mock_dtos.jsonl";
