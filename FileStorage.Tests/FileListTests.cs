@@ -7,7 +7,7 @@ namespace FileStorage.Tests;
 
 public class FileListTests
 {
-    private class MockDto
+    private class DummyDto
     {
         public int Id { get; set; }
         public string Text { get; set; }
@@ -15,7 +15,7 @@ public class FileListTests
 
     private readonly string _fileName = Path.DirectorySeparatorChar + "mock_dtos.jsonl";
 
-    private static readonly MockDto[] MockObjects =
+    private static readonly DummyDto[] MockObjects =
     {
         new() {Id = 12, Text = "Hello"},
         new() {Id = 13, Text = "Hello1"},
@@ -24,7 +24,7 @@ public class FileListTests
         new() {Id = 16, Text = "My name is Aloha dance!"},
     };
 
-    private static readonly MockDto MockObject = new() {Id = 12, Text = "Hello"};
+    private static readonly DummyDto DummyObject = new() {Id = 12, Text = "Hello"};
     
     private static string GetJsonLine<T>(T obj)
         => JsonConvert.SerializeObject(obj) + Environment.NewLine;
@@ -36,10 +36,10 @@ public class FileListTests
     {
         // Arrange
         var fileSystem = new MockFileSystem();
-        var _sut = new FileList<MockDto>(
+        var _sut = new FileList<DummyDto>(
             _fileName,
             fileSystem);
-        var mockObject = new MockDto {Id = 12, Text = "Hello"};
+        var mockObject = new DummyDto {Id = 12, Text = "Hello"};
 
         // Act
         _sut.Add(mockObject);
@@ -57,14 +57,14 @@ public class FileListTests
         {
             {_fileName, ""}
         });
-        var sut = new FileList<MockDto>(
+        var sut = new FileList<DummyDto>(
             _fileName,
             fileSystem);
         var lengthBefore = fileSystem.FileInfo
             .FromFileName(_fileName).Length;
 
         // Act
-        sut.Add(MockObject);
+        sut.Add(DummyObject);
 
         //Assert
         var lengthAfter = fileSystem.FileInfo
@@ -80,15 +80,15 @@ public class FileListTests
         {
             {_fileName, ""}
         });
-        var _sut = new FileList<MockDto>(
+        var _sut = new FileList<DummyDto>(
             _fileName,
             fileSystem);
 
         // Act
-        _sut.Add(MockObject);
+        _sut.Add(DummyObject);
 
         //Assert
-        string json = JsonConvert.SerializeObject(MockObject) + Environment.NewLine;
+        string json = JsonConvert.SerializeObject(DummyObject) + Environment.NewLine;
         string fileContent = fileSystem.File.ReadAllText(_fileName);
         fileContent.Should().Be(json);
     }
@@ -97,12 +97,12 @@ public class FileListTests
     public void AllowsToReadObject()
     {
         // Arrange
-        string json = GetJsonLine(MockObject);
+        string json = GetJsonLine(DummyObject);
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
             {_fileName, json}
         });
-        var sut = new FileList<MockDto>(
+        var sut = new FileList<DummyDto>(
             _fileName,
             fileSystem);
 
@@ -110,7 +110,7 @@ public class FileListTests
         var readObject = sut.FirstOrDefault();
 
         //Assert
-        readObject.Should().BeEquivalentTo(MockObject);
+        readObject.Should().BeEquivalentTo(DummyObject);
     }
     
     [Fact]
@@ -122,7 +122,7 @@ public class FileListTests
         {
             {_fileName, json}
         });
-        var sut = new FileList<MockDto>(
+        var sut = new FileList<DummyDto>(
             _fileName,
             fileSystem);
         const int fromId = 13, toId = 15;
@@ -147,7 +147,7 @@ public class FileListTests
         {
             {_fileName, json}
         });
-        var sut = new FileList<MockDto>(
+        var sut = new FileList<DummyDto>(
             _fileName,
             fileSystem);
         const int fromId = 13, toId = 15;
@@ -172,7 +172,7 @@ public class FileListTests
         {
             {_fileName, json}
         });
-        var sut = new FileList<MockDto>(
+        var sut = new FileList<DummyDto>(
             _fileName,
             fileSystem);
 
@@ -196,13 +196,13 @@ public class FileListTests
         {
             {_fileName, json}
         });
-        var sut = new FileList<MockDto>(
+        var sut = new FileList<DummyDto>(
             _fileName,
             fileSystem);
 
         // Act
         sut.EditFirst(_ => true, 
-            dto => new MockDto
+            dto => new DummyDto
             {
                 Id = dto.Id,
                 Text = dto.Text + " edited"
@@ -211,7 +211,7 @@ public class FileListTests
         //Assert
         var editedMockObjects = MockObjects
             .Skip(1)
-            .Append(new MockDto {Id = 12, Text = "Hello edited"});
+            .Append(new DummyDto {Id = 12, Text = "Hello edited"});
         string jsonAfterRemove = GetJsonLines(editedMockObjects);
         string fileContent = fileSystem.File.ReadAllText(_fileName);
         fileContent.Should().Be(jsonAfterRemove);
