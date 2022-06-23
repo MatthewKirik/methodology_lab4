@@ -18,7 +18,9 @@ public class TaskService : ITaskService
 
     public IEnumerable<TaskDto> GetTasksByDeadline()
 	{
-		throw new NotImplementedException();
+		return taskRepo.GetTasks().OrderBy(
+			task => task.Deadline
+		);
 	}
 
     public IEnumerable<TaskDto> GetOverdueTasks()
