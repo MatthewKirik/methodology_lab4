@@ -25,8 +25,9 @@ public class TaskService : ITaskService
 
     public IEnumerable<TaskDto> GetOverdueTasks()
 	{
+		var timeNow = DateTime.Now;
 		return taskRepo.GetTasks().Where(
-			task => task.Deadline > DateTime.Now
+			task => task.Deadline > timeNow
 		);
 	}
 
