@@ -119,7 +119,25 @@ public static class ArgumentProcessor
 
 	private static void ProcessRemove(string[] args)
 	{
+		ArgumentProcessor.minArgs = 1;
+		ArgumentProcessor.maxArgs = 1;
+		ValidateArgumentsLength(args.Length - 1);
 
+		var idIsNotCorrect = !int.TryParse(args[1], out int id);
+		if (idIsNotCorrect)
+		{
+			throw new ArgumentException("Task id must positive integer.");
+		}
+
+		try
+		{
+			service!.RemoveTask(id);
+			Console.WriteLine("Success!");
+		}
+		catch (Exception)
+		{
+			Console.WriteLine("Cannot edit task from storage.");
+		}
 	}
 
 	private static void ProcessMark(string[] args)
