@@ -10,11 +10,6 @@
 
 try
 {
-	if (args.Length == 0)
-	{
-		throw new NotImplementedException("Interactive mode not implemented.");
-	}
-
 	ArgumentProcessor.Parse(args);
 }
 catch (Exception ex)

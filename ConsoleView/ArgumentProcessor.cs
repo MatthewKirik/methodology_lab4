@@ -195,38 +195,79 @@ public static class ArgumentProcessor
 	// 	Console.WriteLine($"Operation done in: {sw.Elapsed}");
 	// }
 
-	public static void ProcessCommands(string command)
+	private static void ProcessAdd(string[] args)
 	{
+
+	}
+
+	private static void ProcessEdit(string[] args)
+	{
+
+	}
+
+	private static void ProcessRemove(string[] args)
+	{
+
+	}
+
+	private static void ProcessMark(string[] args)
+	{
+
+	}
+
+	private static void ProcessShow(string[] args)
+	{
+
+	}
+
+	private static void ProcessShowOrdered(string[] args)
+	{
+
+	}
+
+	private static void ProcessShowExpired(string[] args)
+	{
+
+	}
+
+	public static void ProcessCommands(string[] args)
+	{
+		if (args.Length == 0)
+		{
+			throw new NotImplementedException("Interactive mode not implemented.");
+		}
+
+		var command = args[0];
 		switch (command)
 		{
 			case "-a":
 			case "--add":
-				// ProcessAdd();
+				ProcessAdd(args);
 				break;
 			case "-e":
 			case "--edit":
-				// ProcessEdit();
+				ProcessEdit(args);
 				break;
 			case "-r":
 			case "--remove":
-				// ProcessRemove();
+				ProcessRemove(args);
 				break;
 			case "-m":
 			case "--mark":
-				// ProcessMark();
+				ProcessMark(args);
 				break;
 			case "-s":
 			case "--show":
-				// ProcessShow();
+				ProcessShow(args);
 				break;
 			case "-so":
 			case "--show-ordered":
-				// ProcessShowOrdered();
+				ProcessShowOrdered(args);
 				break;
 			case "-se":
 			case "--show-expired":
-				// ProcessShowExpired();
-				// break;
+				ProcessShowExpired(args);
+				break;
 			default:
 				throw new ArgumentException("Unknown command.");
 		}
@@ -237,8 +278,6 @@ public static class ArgumentProcessor
 		var filePath = "./file.txt";
 		var taskRepo = new TaskRepository(filePath);
 		ArgumentProcessor.service = new TaskService(taskRepo);
-
-		var command = args[0];
-		ProcessCommands(command);
+		ProcessCommands(args);
 	}
 }
