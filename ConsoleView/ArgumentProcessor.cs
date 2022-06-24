@@ -4,17 +4,22 @@ using DataTransfer.Objects;
 
 public static class ArgumentProcessor
 {
-	private static int minCommandArgs;
-	private static int maxCommandArgs;
+	private static int minArgs;
+	private static int maxArgs;
 	private static TaskService? service;
 
 	private static void ValidateArgumentsLength(int length)
 	{
-		if (length > ArgumentProcessor.maxCommandArgs)
+		if (minArgs == maxArgs && length != minArgs)
+		{
+			throw new ArgumentException($"This command needs {minArgs} argument, but got {length}.");
+		}
+
+		if (length > ArgumentProcessor.maxArgs)
 		{
 			throw new ArgumentException("You have entered too many arguments.");
 		}
-		else if (length < ArgumentProcessor.minCommandArgs)
+		else if (length < ArgumentProcessor.minArgs)
 		{
 			throw new ArgumentException("You have entered too few arguments.");
 		}
@@ -22,8 +27,8 @@ public static class ArgumentProcessor
 
 	private static void ProcessAdd(string[] args)
 	{
-		ArgumentProcessor.minCommandArgs = 1;
-		ArgumentProcessor.maxCommandArgs = 3;
+		ArgumentProcessor.minArgs = 1;
+		ArgumentProcessor.maxArgs = 3;
 		ValidateArgumentsLength(args.Length - 1);
 
 		var taskDto = new TaskDto();
@@ -65,8 +70,8 @@ public static class ArgumentProcessor
 
 	private static void ProcessEdit(string[] args)
 	{
-		ArgumentProcessor.minCommandArgs = 2;
-		ArgumentProcessor.maxCommandArgs = 4;
+		ArgumentProcessor.minArgs = 2;
+		ArgumentProcessor.maxArgs = 4;
 		ValidateArgumentsLength(args.Length - 1);
 
 		var idIsNotCorrect = !int.TryParse(args[1], out int id);
