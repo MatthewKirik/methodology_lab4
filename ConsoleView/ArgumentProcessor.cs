@@ -195,7 +195,18 @@ public static class ArgumentProcessor
 
 	private static void ProcessShowExpired(string[] args)
 	{
-
+		try
+		{
+			var tasks = service!.GetOverdueTasks();
+			foreach (var task in tasks)
+			{
+				Console.WriteLine(task);
+			}
+		}
+		catch (Exception)
+		{
+			Console.WriteLine("Cannot print tasks from storage.");
+		}
 	}
 
 	public static void ProcessCommands(string[] args)
