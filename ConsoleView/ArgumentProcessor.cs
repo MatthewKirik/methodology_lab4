@@ -227,12 +227,64 @@ public static class ArgumentProcessor
 			taskDto.Deadline = deadline;
 		}
 
-		service!.AddTask(taskDto);
+		try
+		{
+			service!.AddTask(taskDto);
+			Console.WriteLine("Success!");
+		}
+		catch (Exception)
+		{
+			Console.WriteLine("Cannot add task into storage.");
+		}
 	}
 
 	private static void ProcessEdit(string[] args)
 	{
+		ArgumentProcessor.minCommandArgs = 2;
+		ArgumentProcessor.maxCommandArgs = 4;
+		ValidateArgumentsLength(args.Length - 1);
 
+		var idIsNotCorrect = !int.TryParse(args[1], out int id);
+		if (idIsNotCorrect)
+		{
+			throw new ArgumentException("Task id must positive integer.");
+		}
+
+		var taskDto = new TaskDto();
+		taskDto.Title = args[2];
+
+		if (args.Length == 3)
+		{
+			taskDto.Description = args[3];
+		}
+		else if (args.Length == 4)
+		{
+			var deadlineStr = args[4];
+			var dateParts = deadlineStr.Split('-');
+			if (dateParts.Length != 3)
+			{
+				throw new FormatException("Invalid deadline format.");
+			}
+			
+			var isDeadLineCorrect = !DateTime.TryParse(deadlineStr, out var deadline);
+			if (isDeadLineCorrect)
+			{
+				throw new FormatException("Invalid deadline format.");
+			}
+
+			taskDto.Description = args[3];
+			taskDto.Deadline = deadline;
+		}
+
+		try
+		{
+			service!.EditTask(id, taskDto);
+			Console.WriteLine("Success!");
+		}
+		catch (Exception)
+		{
+			Console.WriteLine("Cannot edit task from storage.");
+		}
 	}
 
 	private static void ProcessRemove(string[] args)
@@ -305,6 +357,26 @@ public static class ArgumentProcessor
 
 	public static void Parse(string[] args)
 	{
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
+		///////// ???
 		var filePath = "./file.txt";
 		var taskRepo = new TaskRepository(filePath);
 		ArgumentProcessor.service = new TaskService(taskRepo);
