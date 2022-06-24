@@ -1,12 +1,10 @@
-using Repositories.Implementations;
-using Services.Implementations;
 using DataTransfer.Objects;
 
 public static class ArgumentProcessor
 {
 	private static int minArgs;
 	private static int maxArgs;
-	private static TaskService? service;
+	private static Services.ITaskService service;
 
 	private static void ValidateArgumentsLength(int length)
 	{
@@ -142,7 +140,25 @@ public static class ArgumentProcessor
 
 	private static void ProcessMark(string[] args)
 	{
+		ArgumentProcessor.minArgs = 1;
+		ArgumentProcessor.maxArgs = 1;
+		ValidateArgumentsLength(args.Length - 1);
 
+		var idIsNotCorrect = !int.TryParse(args[1], out int id);
+		if (idIsNotCorrect)
+		{
+			throw new ArgumentException("Task id must positive integer.");
+		}
+
+		try
+		{
+			service!.MarkAsCompleted(id);
+			Console.WriteLine("Success!");
+		}
+		catch (Exception)
+		{
+			Console.WriteLine("Cannot edit task from storage.");
+		}
 	}
 
 	private static void ProcessShow(string[] args)
@@ -203,31 +219,9 @@ public static class ArgumentProcessor
 		}
 	}
 
-	public static void Parse(string[] args)
+	public static void Parse(Services.ITaskService service, string[] args)
 	{
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		///////// ???
-		var filePath = "./file.txt";
-		var taskRepo = new TaskRepository(filePath);
-		ArgumentProcessor.service = new TaskService(taskRepo);
+		ArgumentProcessor.service = service;
 		ProcessCommands(args);
 	}
 }
