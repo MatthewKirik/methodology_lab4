@@ -1,4 +1,8 @@
-﻿var helpPage =
+﻿using Repositories.Implementations;
+using Services.Implementations;
+
+
+var helpPage =
 	"Argument help page:" +
 	"-a,  --add          { Title }  { Text: optional } { Deadline (yyyy-mm-dd): optional }" +
 	"-e.  --edit         { Id } { Title } { Text: optional } { Deadline (yyyy-mm-dd): optional }" +
@@ -10,7 +14,10 @@
 
 try
 {
-	ArgumentProcessor.Parse(args);
+	var filePath = "./data.jsonl";
+	var taskRepo = new TaskRepository(filePath);
+	var service = new TaskService(taskRepo);
+	ArgumentProcessor.Parse(service, args);
 }
 catch (Exception ex)
 {
