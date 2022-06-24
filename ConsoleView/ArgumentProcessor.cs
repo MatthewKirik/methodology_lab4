@@ -163,7 +163,18 @@ public static class ArgumentProcessor
 
 	private static void ProcessShow(string[] args)
 	{
-
+		try
+		{
+			var tasks = service!.GetTasks();
+			foreach (var task in tasks)
+			{
+				Console.WriteLine(task);
+			}
+		}
+		catch (Exception)
+		{
+			Console.WriteLine("Cannot print tasks from storage.");
+		}
 	}
 
 	private static void ProcessShowOrdered(string[] args)
