@@ -1,3 +1,24 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿var helpPage =
+	"Argument help page:" +
+	"-a,  --add          { Title }  { Text: optional } { Deadline: optional }" +
+	"-e.  --edit         { Id } { Title } { Text: optional } { Deadline: optional }" +
+	"-r,  --remove       { Id }" +
+	"-m,  --mark         { Id }" +
+	"-s,  --show" +
+	"-so, --show-ordered" +
+	"-se, --show-expired";
 
-Console.WriteLine("Hello, World!");
+try
+{
+	if (args.Length == 0)
+	{
+		throw new NotImplementedException("Interactive mode not implemented.");
+	}
+
+	ArgumentProcessor.Parse(args);
+}
+catch (Exception ex)
+{
+	Console.Error.WriteLine($"Error: {ex.Message}\n");
+	Console.WriteLine(helpPage);
+}
