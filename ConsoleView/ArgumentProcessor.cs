@@ -1,32 +1,37 @@
 using DataTransfer.Objects;
 
-public static class ArgumentProcessor
+public class ArgumentProcessor
 {
-	private static int minArgs;
-	private static int maxArgs;
-	private static Services.ITaskService service;
+	private int minArgs;
+	private int maxArgs;
+	private Services.ITaskService service;
 
-	private static void ValidateArgumentsLength(int length)
+	public ArgumentProcessor(Services.ITaskService service)
+	{
+		this.service = service;
+	}
+
+	private void ValidateArgumentsLength(int length)
 	{
 		if (minArgs == maxArgs && length != minArgs)
 		{
 			throw new ArgumentException($"This command needs {minArgs} argument, but got {length}.");
 		}
 
-		if (length > ArgumentProcessor.maxArgs)
+		if (length > this.maxArgs)
 		{
 			throw new ArgumentException("You have entered too many arguments.");
 		}
-		else if (length < ArgumentProcessor.minArgs)
+		else if (length < this.minArgs)
 		{
 			throw new ArgumentException("You have entered too few arguments.");
 		}
 	}
 
-	private static void ProcessAdd(string[] args)
+	private void ProcessAdd(string[] args)
 	{
-		ArgumentProcessor.minArgs = 1;
-		ArgumentProcessor.maxArgs = 3;
+		this.minArgs = 1;
+		this.maxArgs = 3;
 		ValidateArgumentsLength(args.Length - 1);
 
 		var taskDto = new TaskDto();
@@ -66,10 +71,10 @@ public static class ArgumentProcessor
 		}
 	}
 
-	private static void ProcessEdit(string[] args)
+	private void ProcessEdit(string[] args)
 	{
-		ArgumentProcessor.minArgs = 2;
-		ArgumentProcessor.maxArgs = 4;
+		this.minArgs = 2;
+		this.maxArgs = 4;
 		ValidateArgumentsLength(args.Length - 1);
 
 		var idIsNotCorrect = !int.TryParse(args[1], out int id);
@@ -115,10 +120,10 @@ public static class ArgumentProcessor
 		}
 	}
 
-	private static void ProcessRemove(string[] args)
+	private void ProcessRemove(string[] args)
 	{
-		ArgumentProcessor.minArgs = 1;
-		ArgumentProcessor.maxArgs = 1;
+		this.minArgs = 1;
+		this.maxArgs = 1;
 		ValidateArgumentsLength(args.Length - 1);
 
 		var idIsNotCorrect = !int.TryParse(args[1], out int id);
@@ -138,10 +143,10 @@ public static class ArgumentProcessor
 		}
 	}
 
-	private static void ProcessMark(string[] args)
+	private void ProcessMark(string[] args)
 	{
-		ArgumentProcessor.minArgs = 1;
-		ArgumentProcessor.maxArgs = 1;
+		this.minArgs = 1;
+		this.maxArgs = 1;
 		ValidateArgumentsLength(args.Length - 1);
 
 		var idIsNotCorrect = !int.TryParse(args[1], out int id);
@@ -161,7 +166,7 @@ public static class ArgumentProcessor
 		}
 	}
 
-	private static void ProcessShow(string[] args)
+	private void ProcessShow(string[] args)
 	{
 		try
 		{
@@ -177,7 +182,7 @@ public static class ArgumentProcessor
 		}
 	}
 
-	private static void ProcessShowOrdered(string[] args)
+	private void ProcessShowOrdered(string[] args)
 	{
 		try
 		{
@@ -193,7 +198,7 @@ public static class ArgumentProcessor
 		}
 	}
 
-	private static void ProcessShowExpired(string[] args)
+	private void ProcessShowExpired(string[] args)
 	{
 		try
 		{
@@ -209,7 +214,7 @@ public static class ArgumentProcessor
 		}
 	}
 
-	public static void ProcessCommands(string[] args)
+	private void ProcessCommands(string[] args)
 	{
 		if (args.Length == 0)
 		{
@@ -252,9 +257,8 @@ public static class ArgumentProcessor
 		}
 	}
 
-	public static void Parse(Services.ITaskService service, string[] args)
+	public void Parse(string[] args)
 	{
-		ArgumentProcessor.service = service;
 		ProcessCommands(args);
 	}
 }
