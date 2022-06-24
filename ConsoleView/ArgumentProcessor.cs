@@ -44,12 +44,6 @@ public class ArgumentProcessor
 		else if (args.Length == 4)
 		{
 			var deadlineStr = args[3];
-			var dateParts = deadlineStr.Split('-');
-			if (dateParts.Length != 3)
-			{
-				throw new FormatException("Invalid deadline format.");
-			}
-			
 			var isDeadLineCorrect = !DateTime.TryParse(deadlineStr, out var deadline);
 			if (isDeadLineCorrect)
 			{
@@ -93,12 +87,6 @@ public class ArgumentProcessor
 		else if (args.Length == 4)
 		{
 			var deadlineStr = args[4];
-			var dateParts = deadlineStr.Split('-');
-			if (dateParts.Length != 3)
-			{
-				throw new FormatException("Invalid deadline format.");
-			}
-			
 			var isDeadLineCorrect = !DateTime.TryParse(deadlineStr, out var deadline);
 			if (isDeadLineCorrect)
 			{
