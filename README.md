@@ -36,7 +36,7 @@ To run the program specifying command args, you need to go forward into ConsoleV
 dotnet run --show
 ```
 
-See ([design document](https://google.com)) for more information about project and command args.
+See ([design document](./docs/design-doc.pdf)) for more information about project and command args.
 
 ## License
 
