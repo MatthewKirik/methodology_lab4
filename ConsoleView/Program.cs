@@ -1,7 +1,7 @@
 ﻿var helpPage =
 	"Argument help page:" +
-	"-a,  --add          { Title }  { Text: optional } { Deadline: optional }" +
-	"-e.  --edit         { Id } { Title } { Text: optional } { Deadline: optional }" +
+	"-a,  --add          { Title }  { Text: optional } { Deadline (yyyy-mm-dd): optional }" +
+	"-e.  --edit         { Id } { Title } { Text: optional } { Deadline (yyyy-mm-dd): optional }" +
 	"-r,  --remove       { Id }" +
 	"-m,  --mark         { Id }" +
 	"-s,  --show" +

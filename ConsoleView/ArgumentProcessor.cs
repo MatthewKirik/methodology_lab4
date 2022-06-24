@@ -1,6 +1,6 @@
-using System;
 using Repositories.Implementations;
 using Services.Implementations;
+using DataTransfer.Objects;
 
 public static class ArgumentProcessor
 {
@@ -197,7 +197,37 @@ public static class ArgumentProcessor
 
 	private static void ProcessAdd(string[] args)
 	{
+		ArgumentProcessor.minCommandArgs = 1;
+		ArgumentProcessor.maxCommandArgs = 3;
+		ValidateArgumentsLength(args.Length - 1);
 
+		var taskDto = new TaskDto();
+		taskDto.Title = args[1];
+
+		if (args.Length == 3)
+		{
+			taskDto.Description = args[2];
+		}
+		else if (args.Length == 4)
+		{
+			var deadlineStr = args[3];
+			var dateParts = deadlineStr.Split('-');
+			if (dateParts.Length != 3)
+			{
+				throw new FormatException("Invalid deadline format.");
+			}
+			
+			var isDeadLineCorrect = !DateTime.TryParse(deadlineStr, out var deadline);
+			if (isDeadLineCorrect)
+			{
+				throw new FormatException("Invalid deadline format.");
+			}
+
+			taskDto.Description = args[2];
+			taskDto.Deadline = deadline;
+		}
+
+		service!.AddTask(taskDto);
 	}
 
 	private static void ProcessEdit(string[] args)
