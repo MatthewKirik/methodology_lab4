@@ -179,7 +179,18 @@ public static class ArgumentProcessor
 
 	private static void ProcessShowOrdered(string[] args)
 	{
-
+		try
+		{
+			var tasks = service!.GetTasksByDeadline();
+			foreach (var task in tasks)
+			{
+				Console.WriteLine(task);
+			}
+		}
+		catch (Exception)
+		{
+			Console.WriteLine("Cannot print tasks from storage.");
+		}
 	}
 
 	private static void ProcessShowExpired(string[] args)
